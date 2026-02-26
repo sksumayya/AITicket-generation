@@ -1,0 +1,81 @@
+{% extends "layout.html" %}
+{% block title %}Login - AI Ticket System{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body p-5">
+                <div class="text-center mb-4">
+                    <h1 class="h3 mb-3 fw-normal">
+                        <i class="fas fa-robot me-2 text-primary"></i>AI Ticket System
+                    </h1>
+                    <p class="text-muted">Login to access your AI-powered ticket dashboard</p>
+                </div>
+                
+                <form method="POST" action="{{ url_for('login') }}">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" class="form-control form-control-lg" id="email" name="email" 
+                               placeholder="name@example.com" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <div class="position-relative">
+    <input type="password"
+           class="form-control form-control-lg pe-5"
+           id="password"
+           name="password"
+           placeholder="Enter your password"
+           required>
+
+    <span onclick="toggleLoginPassword()"
+          style="position:absolute; right:15px; top:50%; transform:translateY(-50%); cursor:pointer;">
+        <i class="fas fa-eye" id="loginToggleIcon"></i>
+    </span>
+</div>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-sign-in-alt me-2"></i>Login
+                        </button>
+                        
+                        <div class="text-center mt-3">
+                            <a href="{{ url_for('register') }}" class="text-decoration-none">
+                                Don't have an account? Register here
+                            </a>
+                        </div>
+                    </div>
+                </form>
+                
+                <hr class="my-4">
+                
+                <div class="text-center">
+                    <small class="text-muted">
+                        <i class="fas fa-shield-alt me-1"></i>
+                        Your data is securely encrypted and protected
+                    </small>
+                    <script>
+function toggleLoginPassword() {
+    const passwordField = document.getElementById("password");
+    const icon = document.getElementById("loginToggleIcon");
+
+    if (passwordField.type === "password") {
+        passwordField.type = "text";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+    } else {
+        passwordField.type = "password";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+    }
+}
+</script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

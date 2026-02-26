@@ -1,0 +1,122 @@
+{% extends "layout.html" %}
+{% block title %}Settings - AI Ticket System{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+
+            <div class="card shadow-lg border-0 rounded-4 p-4">
+
+                <!-- Header -->
+                <div class="mb-4">
+                    <h3 class="fw-bold">Account Settings</h3>
+                    <p class="text-muted mb-0">
+                        Manage your profile, security, and account preferences.
+                    </p>
+                </div>
+
+                <hr>
+
+                <!-- Profile Information -->
+                <div class="mb-4">
+                    <h5 class="fw-bold mb-3">Profile Information</h5>
+
+                    <div class="row mb-2">
+                        <div class="col-sm-4 text-muted">Username</div>
+                        <div class="col-sm-8">{{ current_user.username }}</div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-4 text-muted">Email</div>
+                        <div class="col-sm-8">{{ current_user.email }}</div>
+                    </div>
+
+                    <a href="{{ url_for('edit_profile') }}" 
+                       class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-edit me-1"></i> Edit Profile
+                    </a>
+                </div>
+
+                <hr>
+
+                <!-- Security -->
+                <div class="mb-4">
+                    <h5 class="fw-bold mb-3">Security</h5>
+
+                    <a href="{{ url_for('change_password') }}" 
+                       class="btn btn-outline-warning btn-sm">
+                        <i class="fas fa-key me-1"></i> Change Password
+                    </a>
+                </div>
+
+                <hr>
+
+                <!-- Notifications -->
+                <div class="mb-4">
+                    <h5 class="fw-bold mb-3">Notifications</h5>
+
+                    <div class="form-check form-switch mb-2">
+                        <input class="form-check-input" type="checkbox" id="emailNotify" checked>
+                        <label class="form-check-label" for="emailNotify">
+                            Email Notifications
+                        </label>
+                    </div>
+
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="smsNotify">
+                        <label class="form-check-label" for="smsNotify">
+                            SMS Alerts
+                        </label>
+                    </div>
+                </div>
+
+                <hr>
+
+                <!-- Account Management -->
+                <div class="mt-4">
+                    <h5 class="fw-bold mb-3">Account Management</h5>
+
+                    <!-- Deactivate Account -->
+                    <div class="d-flex justify-content-between align-items-center p-3 border rounded-3 mb-3">
+                        <div>
+                            <h6 class="mb-1">Deactivate Account</h6>
+                            <small class="text-muted">
+                                Temporarily disable your account. You can reactivate anytime.
+                            </small>
+                        </div>
+
+                        <form method="POST" action="{{ url_for('deactivate_account') }}">
+                            <button type="submit"
+                                    class="btn btn-outline-secondary btn-sm"
+                                    onclick="return confirm('Are you sure you want to deactivate your account?')">
+                                Deactivate
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Delete Account -->
+                    <div class="d-flex justify-content-between align-items-center p-3 border rounded-3 bg-light">
+                        <div>
+                            <h6 class="mb-1 text-danger">Delete Account</h6>
+                            <small class="text-muted">
+                                Permanently delete your account and all associated data.
+                            </small>
+                        </div>
+
+                        <form method="POST" action="{{ url_for('delete_account') }}">
+                            <button type="submit"
+                                    class="btn btn-danger btn-sm"
+                                    onclick="return confirm('This action is permanent. Are you sure you want to delete your account?')">
+                                Delete
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

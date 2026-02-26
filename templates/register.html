@@ -1,0 +1,180 @@
+{% extends "layout.html" %}
+{% block title %}Register - AI Ticket System{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body p-5">
+                <div class="text-center mb-4">
+                    <h1 class="h3 mb-3 fw-normal">
+                        <i class="fas fa-user-plus me-2 text-primary"></i>Create Account
+                    </h1>
+                    <p class="text-muted">Join our AI-powered ticket management system</p>
+                </div>
+
+                <form method="POST" action="{{ url_for('register') }}">
+
+                    <!-- Username -->
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control form-control-lg"
+                               id="username" name="username"
+                               placeholder="Choose a username" required>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" class="form-control form-control-lg"
+                               id="email" name="email"
+                               placeholder="name@example.com" required>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+
+                        <div class="position-relative">
+                            <input type="password"
+                                   class="form-control form-control-lg pe-5"
+                                   id="password"
+                                   name="password"
+                                   placeholder="Create a strong password"
+                                   required>
+
+                            <span onclick="togglePassword()"
+                                  style="position:absolute; right:15px; top:50%; transform:translateY(-50%); cursor:pointer;">
+                                <i class="fas fa-eye" id="togglePasswordIcon"></i>
+                            </span>
+                        </div>
+
+                        <div class="mt-2">
+                            <small>
+                                Password Strength:
+                                <span id="passwordStrength" class="badge bg-secondary">Not set</span>
+                            </small>
+                        </div>
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div class="mb-3">
+                        <label for="confirmPassword" class="form-label">Confirm Password</label>
+
+                        <div class="position-relative">
+                            <input type="password"
+                                   class="form-control form-control-lg pe-5"
+                                   id="confirmPassword"
+                                   placeholder="Confirm your password"
+                                   required>
+
+                            <span onclick="toggleConfirmPassword()"
+                                  style="position:absolute; right:15px; top:50%; transform:translateY(-50%); cursor:pointer;">
+                                <i class="fas fa-eye" id="toggleConfirmIcon"></i>
+                            </span>
+                        </div>
+
+                        <div class="mt-2">
+                            <small id="passwordMatch"></small>
+                        </div>
+                    </div>
+
+                    <!-- Terms -->
+                    <div class="form-check mb-4">
+                        <input class="form-check-input" type="checkbox" id="terms" required>
+                        <label class="form-check-label" for="terms">
+                            I agree to the
+                            <a href="#" class="text-decoration-none">Terms of Service</a>
+                            and
+                            <a href="#" class="text-decoration-none">Privacy Policy</a>
+                        </label>
+                    </div>
+
+                    <!-- Submit -->
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-user-plus me-2"></i>Create Account
+                        </button>
+
+                        <div class="text-center mt-3">
+                            <a href="{{ url_for('login') }}" class="text-decoration-none">
+                                Already have an account? Login here
+                            </a>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+
+    // Password strength checker
+    $('#password').on('keyup', function() {
+        const password = $(this).val();
+        let strength = 0;
+
+        if (password.length >= 8) strength++;
+        if (password.match(/[a-z]/)) strength++;
+        if (password.match(/[A-Z]/)) strength++;
+        if (password.match(/[0-9]/)) strength++;
+        if (password.match(/[^a-zA-Z0-9]/)) strength++;
+
+        const strengthText = ['Very Weak', 'Weak', 'Fair', 'Good', 'Strong'][strength];
+        const strengthColor = ['danger', 'danger', 'warning', 'info', 'success'][strength];
+
+        $('#passwordStrength').text(strengthText);
+        $('#passwordStrength').removeClass().addClass('badge bg-' + strengthColor);
+    });
+
+    // Confirm password validation
+    $('#confirmPassword').on('keyup', function() {
+        const password = $('#password').val();
+        const confirmPassword = $(this).val();
+
+        if (password && confirmPassword) {
+            if (password === confirmPassword) {
+                $('#passwordMatch').html('<i class="fas fa-check-circle text-success"></i> Passwords match');
+            } else {
+                $('#passwordMatch').html('<i class="fas fa-times-circle text-danger"></i> Passwords do not match');
+            }
+        }
+    });
+
+});
+
+// Toggle Password
+function togglePassword() {
+    const password = document.getElementById("password");
+    const icon = document.getElementById("togglePasswordIcon");
+
+    if (password.type === "password") {
+        password.type = "text";
+        icon.classList.replace("fa-eye", "fa-eye-slash");
+    } else {
+        password.type = "password";
+        icon.classList.replace("fa-eye-slash", "fa-eye");
+    }
+}
+
+// Toggle Confirm Password
+function toggleConfirmPassword() {
+    const password = document.getElementById("confirmPassword");
+    const icon = document.getElementById("toggleConfirmIcon");
+
+    if (password.type === "password") {
+        password.type = "text";
+        icon.classList.replace("fa-eye", "fa-eye-slash");
+    } else {
+        password.type = "password";
+        icon.classList.replace("fa-eye-slash", "fa-eye");
+    }
+}
+</script>
+{% endblock %}

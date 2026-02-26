@@ -1,0 +1,302 @@
+{% extends "layout.html" %}
+{% block title %}Create Ticket - AI Ticket System{% endblock %}
+
+{% block extra_css %}
+<style>
+    .category-card {
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+    
+    .category-card:hover {
+        transform: translateY(-3px);
+        border-color: var(--primary);
+    }
+    
+    .category-card.selected {
+        border-color: var(--primary);
+        background-color: rgba(67, 97, 238, 0.05);
+    }
+    
+    .priority-option {
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .priority-option:hover {
+        transform: translateY(-2px);
+    }
+    
+    .priority-option.selected {
+        border-color: var(--primary) !important;
+        background-color: rgba(67, 97, 238, 0.05);
+    }
+    
+    #aiPreview {
+        transition: all 0.3s ease;
+    }
+    
+    .ai-loading {
+        text-align: center;
+        padding: 40px;
+    }
+    
+    .ai-loading i {
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // Category selection
+    $('.category-card').click(function() {
+        $('.category-card').removeClass('selected');
+        $(this).addClass('selected');
+        $('#category').val($(this).data('category'));
+    });
+    
+    // Priority selection
+    $('.priority-option').click(function() {
+        $('.priority-option').removeClass('selected');
+        $(this).addClass('selected');
+        $('#priority').val($(this).data('priority'));
+    });
+    
+    // AI Analysis
+    $('#analyzeBtn').click(function() {
+        const description = $('#description').val().trim();
+        if (!description) {
+            alert('Please enter a description for AI analysis');
+            return;
+        }
+        
+        // Show loading
+        $(this).prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i>AI is analyzing...');
+        $('#aiPreview').html(`
+            <div class="ai-loading">
+                <i class="fas fa-robot fa-3x text-primary mb-3"></i>
+                <h4>AI is analyzing your request...</h4>
+                <p>Our AI is reading your description and will provide smart suggestions</p>
+            </div>
+        `).show();
+        
+        // Send to API
+        $.ajax({
+            url: '/api/analyze-ticket',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ description: description }),
+            success: function(data) {
+                // Update form with AI suggestions
+                if (data.ai_category) {
+                    $(`.category-card[data-category="${data.ai_category}"]`).click();
+                }
+                if (data.ai_priority) {
+                    $(`.priority-option[data-priority="${data.ai_priority}"]`).click();
+                }
+                
+                // Show AI preview
+                $('#aiPreview').html(`
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0"><i class="fas fa-robot me-2"></i>AI Analysis Results</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <h6>Suggested Category</h6>
+                                    <div class="alert alert-info">
+                                        <strong>${data.ai_category}</strong>
+                                        <div class="mt-1">
+                                            <small>Confidence: ${(data.ai_confidence * 100).toFixed(1)}%</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>Suggested Priority</h6>
+                                    <div class="alert alert-warning">
+                                        <strong class="text-capitalize">${data.ai_priority}</strong>
+                                        <div class="mt-1">
+                                            <small>Priority Score: ${(data.ai_priority_score * 100).toFixed(1)}%</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <h6>AI Insights</h6>
+                            <div class="alert alert-light border">
+                                <p class="mb-0">${data.ai_insights}</p>
+                            </div>
+                            
+                            <h6>Estimated Resolution</h6>
+                            <div class="alert alert-success">
+                                <strong>${data.estimated_resolution}</strong>
+                                <div class="mt-1">
+                                    <small>Based on similar historical tickets</small>
+                                </div>
+                            </div>
+                            
+                            <div class="text-end">
+                                <button type="button" class="btn btn-primary" onclick="$('#submitBtn').click()">
+                                    <i class="fas fa-paper-plane me-2"></i>Submit with AI Suggestions
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).show();
+                
+                // Re-enable analyze button
+                $('#analyzeBtn').prop('disabled', false).html('<i class="fas fa-brain me-2"></i>Analyze with AI');
+            },
+            error: function() {
+                alert('Error analyzing ticket. Please try again.');
+                $('#analyzeBtn').prop('disabled', false).html('<i class="fas fa-brain me-2"></i>Analyze with AI');
+            }
+        });
+    });
+    
+    // Form submission
+    $('#ticketForm').submit(function(e) {
+        e.preventDefault();
+        
+        // Basic validation
+        const title = $('#title').val().trim();
+        const description = $('#description').val().trim();
+        
+        if (!title || !description) {
+            alert('Please fill in all required fields');
+            return;
+        }
+        
+        // Show loading on submit button
+        $('#submitBtn').prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i>Creating Ticket...');
+        
+        // Submit form
+        this.submit();
+    });
+});
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h3 class="mb-0"><i class="fas fa-plus-circle me-2 text-primary"></i>Create New Ticket</h3>
+                <p class="text-muted mb-0">Describe your issue and let our AI handle the categorization</p>
+            </div>
+            <div class="card-body">
+                <form id="ticketForm" method="POST" action="{{ url_for('create_ticket') }}">
+                    <div class="row mb-4">
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                <label for="title" class="form-label">Subject *</label>
+                                <input type="text" class="form-control form-control-lg" id="title" name="title" 
+                                       placeholder="Brief description of your issue" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Detailed Description *</label>
+                                <textarea class="form-control" id="description" name="description" 
+                                          rows="6" placeholder="Please provide as much detail as possible about your issue..." 
+                                          required></textarea>
+                                <div class="form-text">
+                                    The more details you provide, the better our AI can categorize and prioritize your ticket.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="sticky-top" style="top: 20px;">
+                                <div class="card mb-3">
+                                    <div class="card-header bg-light">
+                                        <h6 class="mb-0">Category</h6>
+                                    </div>
+                                    <div class="card-body p-2">
+                                        <input type="hidden" id="category" name="category">
+                                        <div class="row g-2">
+                                            <div class="col-6">
+                                                <div class="category-card card text-center p-3" data-category="technical">
+                                                    <i class="fas fa-laptop-code fa-2x text-primary mb-2"></i>
+                                                    <small>Technical</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="category-card card text-center p-3" data-category="billing">
+                                                    <i class="fas fa-credit-card fa-2x text-success mb-2"></i>
+                                                    <small>Billing</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="category-card card text-center p-3" data-category="feature">
+                                                    <i class="fas fa-lightbulb fa-2x text-warning mb-2"></i>
+                                                    <small>Feature</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="category-card card text-center p-3" data-category="account">
+                                                    <i class="fas fa-user-cog fa-2x text-danger mb-2"></i>
+                                                    <small>Account</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="card">
+                                    <div class="card-header bg-light">
+                                        <h6 class="mb-0">Priority</h6>
+                                    </div>
+                                    <div class="card-body p-2">
+                                        <input type="hidden" id="priority" name="priority" value="medium">
+                                        <div class="d-grid gap-2">
+                                            <div class="priority-option card p-3 border text-center selected" data-priority="low">
+                                                <h6 class="mb-1"><i class="fas fa-arrow-down text-success me-2"></i>Low</h6>
+                                                <small class="text-muted">Within 5 business days</small>
+                                            </div>
+                                            <div class="priority-option card p-3 border text-center" data-priority="medium">
+                                                <h6 class="mb-1"><i class="fas fa-minus text-warning me-2"></i>Medium</h6>
+                                                <small class="text-muted">Within 48 hours</small>
+                                            </div>
+                                            <div class="priority-option card p-3 border text-center" data-priority="high">
+                                                <h6 class="mb-1"><i class="fas fa-arrow-up text-danger me-2"></i>High</h6>
+                                                <small class="text-muted">Within 24 hours</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                        </a>
+                        
+                        <div>
+                            <button type="button" id="analyzeBtn" class="btn btn-primary me-2">
+                                <i class="fas fa-brain me-2"></i>Analyze with AI
+                            </button>
+                            <button type="submit" id="submitBtn" class="btn btn-success">
+                                <i class="fas fa-paper-plane me-2"></i>Submit Ticket
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                
+                <div id="aiPreview" class="mt-4" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

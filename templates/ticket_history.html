@@ -1,0 +1,223 @@
+{% extends "layout.html" %}
+{% block title %}Ticket History - AI Ticket System{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // Search functionality
+    $('#searchInput').on('keyup', function() {
+        const searchTerm = $(this).val().toLowerCase();
+        $('.ticket-row').each(function() {
+            const text = $(this).text().toLowerCase();
+            $(this).toggle(text.indexOf(searchTerm) > -1);
+        });
+    });
+    
+    // Filter functionality
+    $('#categoryFilter, #statusFilter, #priorityFilter').change(function() {
+        filterTickets();
+    });
+    
+    function filterTickets() {
+        const category = $('#categoryFilter').val();
+        const status = $('#statusFilter').val();
+        const priority = $('#priorityFilter').val();
+        
+        $('.ticket-row').each(function() {
+            const ticketCategory = $(this).data('category');
+            const ticketStatus = $(this).data('status');
+            const ticketPriority = $(this).data('priority');
+            
+            const categoryMatch = !category || category === ticketCategory;
+            const statusMatch = !status || status === ticketStatus;
+            const priorityMatch = !priority || priority === ticketPriority;
+            
+            $(this).toggle(categoryMatch && statusMatch && priorityMatch);
+        });
+    }
+    
+    // Export functionality
+    $('#exportBtn').click(function() {
+        // In a real app, this would call an API endpoint
+        alert('Export feature would generate a CSV/Excel file in a real implementation');
+    });
+});
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1 class="h2 mb-0">Ticket History</h1>
+        <p class="text-muted">View and manage all your submitted tickets</p>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{{ url_for('create_ticket') }}" class="btn btn-primary">
+            <i class="fas fa-plus-circle me-2"></i>New Ticket
+        </a>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                    <input type="text" id="searchInput" class="form-control" placeholder="Search tickets..." 
+                           value="{{ search }}">
+                </div>
+            </div>
+            
+            <div class="col-md-2">
+                <select id="categoryFilter" class="form-select">
+                    <option value="">All Categories</option>
+                    {% for cat in categories %}
+                    <option value="{{ cat }}" {% if selected_category == cat %}selected{% endif %}>
+                        {{ cat }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="col-md-2">
+                <select id="statusFilter" class="form-select">
+                    <option value="">All Status</option>
+                    <option value="open" {% if selected_status == 'open' %}selected{% endif %}>Open</option>
+                    <option value="in_progress" {% if selected_status == 'in_progress' %}selected{% endif %}>In Progress</option>
+                    <option value="resolved" {% if selected_status == 'resolved' %}selected{% endif %}>Resolved</option>
+                    <option value="closed" {% if selected_status == 'closed' %}selected{% endif %}>Closed</option>
+                </select>
+            </div>
+            
+            <div class="col-md-2">
+                <select id="priorityFilter" class="form-select">
+                    <option value="">All Priorities</option>
+                    <option value="low" {% if selected_priority == 'low' %}selected{% endif %}>Low</option>
+                    <option value="medium" {% if selected_priority == 'medium' %}selected{% endif %}>Medium</option>
+                    <option value="high" {% if selected_priority == 'high' %}selected{% endif %}>High</option>
+                </select>
+            </div>
+            
+            <div class="col-md-2">
+                <button id="exportBtn" class="btn btn-outline-secondary w-100">
+                    <i class="fas fa-download me-2"></i>Export
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if tickets %}
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Ticket ID</th>
+                        <th>Subject</th>
+                        <th>Category</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Created</th>
+                        <th>AI Categorized</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ticket in tickets %}
+                    <tr class="ticket-row" 
+                        data-category="{{ ticket.category }}"
+                        data-status="{{ ticket.status }}"
+                        data-priority="{{ ticket.priority }}">
+                        <td style="color: #000;">
+                            <strong style="color: #000;">{{ ticket.ticket_id }}</strong>
+                            {% if ticket.ai_category %}
+                            <span class="badge bg-info" title="AI Suggested: {{ ticket.ai_category }}">
+                                AI
+                            </span>
+                            {% endif %}
+                        </td>
+                        <td style="color: #000;">
+                            <div class="fw-semibold" style="color: #000;">{{ ticket.title }}</div>
+                            <small style="color: #000;">{{ ticket.description[:50] }}...</small>
+                        </td>
+                        <td style="color: #000;">{{ ticket.category|title }}</td>
+                        <td style="color: #000;">
+                            <span class="badge priority-{{ ticket.priority }}" style="color: #000;">
+                                {{ ticket.priority|title }}
+                            </span>
+                        </td>
+                        <td style="color: #000;">
+                            <span class="badge status-{{ ticket.status|replace('_', '-') }}" style="color: #000;">
+                                {{ ticket.status|replace('_', ' ')|title }}
+                            </span>
+                        </td>
+                        <td style="color: #000;">{{ ticket.created_at.strftime('%Y-%m-%d') }}</td>
+                        <td style="color: #000;">
+                            {% if ticket.ai_category %}
+                            <i class="fas fa-check-circle text-success" title="AI Accuracy: {{ (ticket.ai_confidence * 100)|round(1) }}%"></i>
+                            {% else %}
+                            <i class="fas fa-times-circle text-muted"></i>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Quick Actions
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="{{ url_for('view_ticket', ticket_id=ticket.ticket_id) }}"><i class="fas fa-eye me-2"></i>View</a></li>
+                                    <li><a class="dropdown-item" href="mailto:support@example.com?subject=Ticket%20{{ ticket.ticket_id }}"><i class="fas fa-envelope me-2"></i>Email Support</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('dashboard') }}"><i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <p class="text-muted">Showing {{ tickets|length }} ticket(s)</p>
+    </div>
+    <div class="col-md-6">
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-end">
+                <li class="page-item disabled">
+                    <a class="page-link" href="#">Previous</a>
+                </li>
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+{% else %}
+<div class="card">
+    <div class="card-body text-center py-5">
+        <i class="fas fa-ticket-alt fa-4x text-muted mb-4"></i>
+        <h3>No tickets found</h3>
+        <p class="text-muted mb-4">
+            {% if search or selected_category or selected_status or selected_priority %}
+            Try adjusting your filters or search terms
+            {% else %}
+            You haven't created any tickets yet
+            {% endif %}
+        </p>
+        <a href="{{ url_for('create_ticket') }}" class="btn btn-primary">
+            <i class="fas fa-plus-circle me-2"></i>Create Your First Ticket
+        </a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

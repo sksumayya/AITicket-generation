@@ -1,0 +1,162 @@
+{% extends "layout.html" %}
+{% block title %}Ticket {{ ticket.ticket_id }} - AI Ticket System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header bg-white">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">Ticket: {{ ticket.ticket_id }}</h3>
+                    <span class="badge bg-primary">Created: {{ ticket.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <h4 class="mb-3">{{ ticket.title }}</h4>
+                <div class="mb-4">
+                    <h6>Description:</h6>
+                    <p class="text-muted">{{ ticket.description }}</p>
+                </div>
+                
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <h6>Category:</h6>
+                        <span class="badge bg-info">{{ ticket.category|title }}</span>
+                    </div>
+                    <div class="col-md-3">
+                        <h6>Priority:</h6>
+                        <span class="badge priority-{{ ticket.priority }}">{{ ticket.priority|title }}</span>
+                    </div>
+                    <div class="col-md-3">
+                        <h6>Status:</h6>
+                        <span class="badge status-{{ ticket.status|replace('_', '-') }}">
+                            {{ ticket.status|replace('_', ' ')|title }}
+                        </span>
+                    </div>
+                    <div class="col-md-3">
+                        <h6>Updated:</h6>
+                        <span class="text-muted">{{ ticket.updated_at.strftime('%Y-%m-%d %H:%M') }}</span>
+                    </div>
+                </div>
+                
+                {% if ticket.ai_insights %}
+                <div class="card bg-light border-0">
+                    <div class="card-body">
+                        <h6><i class="fas fa-robot me-2 text-primary"></i>AI Analysis</h6>
+                        <p class="mb-0">{{ ticket.ai_insights }}</p>
+                        {% if ticket.ai_category %}
+                        <div class="mt-2">
+                            <small class="text-muted">
+                                AI Suggested: {{ ticket.ai_category|title }} 
+                                ({{ (ticket.ai_confidence * 100)|round(1) }}% confidence)
+                            </small>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Ticket History -->
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Ticket History</h5>
+            </div>
+            <div class="card-body">
+                {% if ticket.history %}
+                <div class="timeline">
+                    {% for history in ticket.history|sort(attribute='created_at', reverse=true) %}
+                    <div class="timeline-item mb-3">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h6 class="mb-1">{{ history.action }}</h6>
+                            <p class="text-muted small mb-1">{{ history.details }}</p>
+                            <small class="text-muted">
+                                {{ history.created_at.strftime('%Y-%m-%d %H:%M') }} by {{ history.changed_by }}
+                            </small>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted text-center">No history available for this ticket.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <button class="btn btn-outline-primary">
+                        <i class="fas fa-edit me-2"></i>Update Ticket
+                    </button>
+                    <button class="btn btn-outline-success">
+                        <i class="fas fa-check-circle me-2"></i>Mark as Resolved
+                    </button>
+                    <button class="btn btn-outline-warning">
+                        <i class="fas fa-clock me-2"></i>Change Priority
+                    </button>
+                    <button class="btn btn-outline-danger">
+                        <i class="fas fa-times-circle me-2"></i>Close Ticket
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">AI Insights</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <h6>Category Match:</h6>
+                    <div class="progress" style="height: 20px;">
+                        <div class="progress-bar bg-success" role="progressbar" 
+                             style="width: {{ (ticket.ai_confidence * 100) if ticket.ai_confidence else 0 }}%">
+                            {{ ((ticket.ai_confidence * 100) if ticket.ai_confidence else 0)|round(1) }}%
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <h6>Estimated Resolution:</h6>
+                    <div class="alert alert-success">
+                        <i class="fas fa-calendar-check me-2"></i>
+                        {{ get_estimated_resolution(ticket.category, ticket.priority) }}
+                    </div>
+                </div>
+                
+                <div>
+                    <h6>Assigned Team:</h6>
+                    <div class="alert alert-info">
+                        <i class="fas fa-users me-2"></i>
+                        {% if ticket.category == 'technical' %}
+                        Technical Support Team
+                        {% elif ticket.category == 'billing' %}
+                        Billing Department
+                        {% elif ticket.category == 'feature' %}
+                        Product Team
+                        {% elif ticket.category == 'account' %}
+                        Customer Success Team
+                        {% else %}
+                        General Support
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-3">
+    <a href="{{ url_for('ticket_history') }}" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-2"></i>Back to History
+    </a>
+</div>
+{% endblock %}

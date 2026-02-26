@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block title %}{{ blog.title }}{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+    <h2 class="fw-bold mb-4">{{ blog.title }}</h2>
+    <p style="font-size: 1.1rem; line-height: 1.8;">
+        {{ blog.content }}
+    </p>
+
+    <a href="{{ url_for('blog') }}" class="btn btn-secondary mt-4">
+        ← Back to Blog
+    </a>
+</div>
+
+{% endblock %}

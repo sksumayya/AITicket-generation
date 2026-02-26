@@ -1,0 +1,164 @@
+{% extends "layout.html" %}
+{% block title %}Careers - AI Ticket System{% endblock %}
+
+{% block extra_css %}
+<style>
+
+.careers-hero {
+    background: linear-gradient(90deg,#a3389f, #8aabbb);
+    color: white;
+    padding: 80px 0;
+    text-align: center;
+}
+
+.careers-section {
+    padding: 70px 0;
+}
+
+.job-card {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    transition: 0.3s ease;
+}
+
+.job-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+}
+
+.job-meta {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 15px;
+}
+
+.apply-btn {
+    background: linear-gradient(90deg,#a3389f, #8aabbb);
+    border: none;
+    color: white;
+}
+
+.apply-btn:hover {
+    opacity: 0.9;
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<div class="careers-hero">
+    <div class="container">
+        <h1>Join Our Team</h1>
+        <p class="mt-3">Help us revolutionize AI-powered ticket management.</p>
+    </div>
+</div>
+
+<!-- OPEN POSITIONS -->
+<div class="careers-section">
+    <div class="container">
+        <div class="row g-4">
+
+            <!-- Job 1 -->
+            <div class="col-md-6">
+                <div class="job-card">
+                    <h4>AI Engineer</h4>
+                    <div class="job-meta">
+                        Full-Time • Remote • 3+ Years Experience
+                    </div>
+                    <p>
+                        Build and optimize AI models for intelligent ticket categorization and sentiment analysis.
+                    </p>
+                    <button class="btn apply-btn mt-3" data-bs-toggle="modal" data-bs-target="#applyModal">
+                        Apply Now
+                    </button>
+                </div>
+            </div>
+
+            <!-- Job 2 -->
+            <div class="col-md-6">
+                <div class="job-card">
+                    <h4>Frontend Developer</h4>
+                    <div class="job-meta">
+                        Full-Time • Onsite • 2+ Years Experience
+                    </div>
+                    <p>
+                        Design and build modern, responsive SaaS dashboards using modern frontend technologies.
+                    </p>
+                    <button class="btn apply-btn mt-3" data-bs-toggle="modal" data-bs-target="#applyModal">
+                        Apply Now
+                    </button>
+                </div>
+            </div>
+
+            <!-- Job 3 -->
+            <div class="col-md-6">
+                <div class="job-card">
+                    <h4>DevOps Engineer</h4>
+                    <div class="job-meta">
+                        Full-Time • Remote • 4+ Years Experience
+                    </div>
+                    <p>
+                        Manage CI/CD pipelines, cloud infrastructure, and production deployments.
+                    </p>
+                    <button class="btn apply-btn mt-3" data-bs-toggle="modal" data-bs-target="#applyModal">
+                        Apply Now
+                    </button>
+                </div>
+            </div>
+
+            <!-- Job 4 -->
+            <div class="col-md-6">
+                <div class="job-card">
+                    <h4>Customer Success Manager</h4>
+                    <div class="job-meta">
+                        Full-Time • Hybrid • 2+ Years Experience
+                    </div>
+                    <p>
+                        Ensure customer satisfaction and help enterprises adopt AI-powered ticket systems.
+                    </p>
+                    <button class="btn apply-btn mt-3" data-bs-toggle="modal" data-bs-target="#applyModal">
+                        Apply Now
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- APPLICATION MODAL -->
+<div class="modal fade" id="applyModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Apply for Position</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label class="form-label">Full Name</label>
+            <input type="text" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Upload Resume</label>
+            <input type="file" class="form-control">
+          </div>
+          <button type="submit" class="btn apply-btn w-100">
+              Submit Application
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

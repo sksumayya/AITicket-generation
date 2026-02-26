@@ -1,0 +1,216 @@
+{% extends "layout.html" %}
+{% block title %}Blog - AI Ticket System{% endblock %}
+
+{% block extra_css %}
+<style>
+
+.blog-hero {
+    background: linear-gradient(90deg,#a3389f, #8aabbb);
+    color: white;
+    padding: 80px 0;
+    text-align: center;
+}
+
+.blog-section {
+    padding: 70px 0;
+}
+
+.blog-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    transition: 0.3s ease;
+}
+
+.blog-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+}
+
+.blog-image {
+    height: 200px;
+    overflow: hidden;
+}
+
+.blog-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: 0.4s ease;
+}
+
+.blog-card:hover .blog-image img {
+    transform: scale(1.05);
+}
+
+.blog-content {
+    padding: 25px;
+}
+
+.blog-category {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #a3389f;
+    margin-bottom: 10px;
+}
+
+.blog-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.blog-text {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 15px;
+}
+
+.read-more {
+    color: #a3389f;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.read-more:hover {
+    text-decoration: underline;
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<div class="blog-hero">
+    <div class="container">
+        <h1>AI Ticket Insights</h1>
+        <p class="mt-3">Product updates, AI improvements, and ticket management strategies.</p>
+    </div>
+</div>
+
+<!-- BLOG POSTS -->
+<div class="blog-section">
+    <div class="container">
+        <div class="row g-4">
+
+            <!-- Blog 1 -->
+            <div class="col-md-4">
+                <div class="blog-card">
+                    <div class="blog-image">
+                        <img src="{{ url_for('static', filename='images/ai-category.jpg') }}">
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-category">AI Technology</div>
+                        <div class="blog-title">
+                            How AI Improves Ticket Categorization
+                        </div>
+                        <div class="blog-text">
+                            Our NLP model analyzes ticket descriptions and automatically assigns accurate categories using machine learning.
+                        </div>
+                        <a href="{{ url_for('blog_detail', blog_id=1) }}" class="read-more">Read More →</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blog 2 -->
+            <div class="col-md-4">
+                <div class="blog-card">
+                    <div class="blog-image">
+                        <img src="{{ url_for('static', filename='images/analytics.jpg') }}">
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-category">Product Update</div>
+                        <div class="blog-title">
+                            Advanced Analytics Dashboard
+                        </div>
+                        <div class="blog-text">
+                            Track resolution rates, ticket trends, and AI model accuracy in real time through our analytics dashboard.
+                        </div>
+                        <a href="{{ url_for('blog_detail', blog_id=2) }}" class="read-more">Read More →</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blog 3 -->
+            <div class="col-md-4">
+                <div class="blog-card">
+                    <div class="blog-image">
+                        <img src="{{ url_for('static', filename='images/resolution.jpg') }}">
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-category">Best Practices</div>
+                        <div class="blog-title">
+                            Reducing Ticket Resolution Time
+                        </div>
+                        <div class="blog-text">
+                            Discover workflow improvements and automation strategies that help support teams close tickets faster.
+                        </div>
+                        <a href="{{ url_for('blog_detail', blog_id=3) }}" class="read-more">Read More →</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blog 4 (Replaced Sentiment) -->
+            <div class="col-md-4">
+                <div class="blog-card">
+                    <div class="blog-image">
+                        <img src="{{ url_for('static', filename='images/priority.jpg') }}">
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-category">AI Model</div>
+                        <div class="blog-title">
+                            Smart Priority Prediction with AI
+                        </div>
+                        <div class="blog-text">
+                            Our trained BERT-based model predicts ticket priority levels to ensure urgent issues are handled first.
+                        </div>
+                        <a href="{{ url_for('blog_detail', blog_id=4) }}" class="read-more">Read More →</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blog 5 -->
+            <div class="col-md-4">
+                <div class="blog-card">
+                    <div class="blog-image">
+                        <img src="{{ url_for('static', filename='images/case-study.jpg') }}">
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-category">Case Study</div>
+                        <div class="blog-title">
+                            How Enterprises Use AI Ticket Systems
+                        </div>
+                        <div class="blog-text">
+                            Learn how automation reduces manual effort and increases operational efficiency across support teams.
+                        </div>
+                        <a href="{{ url_for('blog_detail', blog_id=5) }}" class="read-more">Read More →</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blog 6 -->
+            <div class="col-md-4">
+                <div class="blog-card">
+                    <div class="blog-image">
+                        <img src="{{ url_for('static', filename='images/roadmap.jpg') }}">
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-category">Company News</div>
+                        <div class="blog-title">
+                            AI Ticket Platform Roadmap
+                        </div>
+                        <div class="blog-text">
+                            Upcoming improvements include enhanced prediction accuracy and multi-language support.
+                        </div>
+                        <a href="{{ url_for('blog_detail', blog_id=6) }}" class="read-more">Read More →</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

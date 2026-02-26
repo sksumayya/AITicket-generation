@@ -1,0 +1,198 @@
+{% extends "layout.html" %}
+{% block title %}Features - AI Ticket System{% endblock %}
+
+{% block extra_css %}
+<style>
+
+.features-hero {
+    background: linear-gradient(90deg,#a3389f, #8aabbb);
+    color: white;
+    padding: 100px 0;
+    text-align: center;
+}
+
+.features-section {
+    padding: 80px 0;
+}
+
+.feature-card {
+    background: white;
+    border-radius: 20px;
+    padding: 40px 30px;
+    text-align: center;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+    transition: 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 25px 50px rgba(0,0,0,0.12);
+}
+
+.feature-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    background: linear-gradient(90deg,#a3389f, #8aabbb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.workflow-section {
+    background: #f8f9ff;
+    padding: 80px 0;
+}
+
+.workflow-step {
+    text-align: center;
+    padding: 20px;
+}
+
+.workflow-number {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(90deg,#a3389f, #8aabbb);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px auto;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.cta-section {
+    background: linear-gradient(90deg,#a3389f, #8aabbb);
+    color: white;
+    padding: 80px 0;
+    text-align: center;
+}
+
+.cta-btn {
+    background: white;
+    color: #a3389f;
+    border: none;
+    padding: 12px 30px;
+    font-weight: 600;
+}
+
+.cta-btn:hover {
+    opacity: 0.9;
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<div class="features-hero">
+    <div class="container">
+        <h1>Powerful AI Features Built for Modern Teams</h1>
+        <p class="mt-4">
+            Automate, analyze, and optimize your support workflow with intelligent AI.
+        </p>
+    </div>
+</div>
+
+<!-- CORE FEATURES -->
+<div class="features-section">
+    <div class="container">
+        <div class="row g-4">
+
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h4>AI Ticket Categorization</h4>
+                    <p>
+                        Automatically classify tickets based on intent and content using advanced NLP models.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h4>Smart Analytics</h4>
+                    <p>
+                        Gain insights into resolution time, performance trends, and team productivity.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h4>AI Analysis</h4>
+                    <p>
+                        AI analyzes ticket content and predicts category and priority using trained models.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- WORKFLOW SECTION -->
+<div class="workflow-section">
+    <div class="container">
+        <h2 class="text-center mb-5">How It Works</h2>
+        <div class="row g-4">
+
+            <div class="col-md-3">
+                <div class="workflow-step">
+                    <div class="workflow-number">1</div>
+                    <h5>User Submits Ticket</h5>
+                    <p>Customer describes the issue in natural language.</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="workflow-step">
+                    <div class="workflow-number">2</div>
+                    <h5>AI Analysis</h5>
+                    <p>AI evaluates intent, category, and sentiment.</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="workflow-step">
+                    <div class="workflow-number">3</div>
+                    <h5>Smart Routing</h5>
+                    <p>Ticket is automatically assigned to the right team.</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="workflow-step">
+                    <div class="workflow-number">4</div>
+                    <h5>Faster Resolution</h5>
+                    <p>Teams resolve tickets efficiently with AI insights.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- CALL TO ACTION -->
+<div class="cta-section">
+    <div class="container">
+        <h2>Ready to Transform Your Support System?</h2>
+        <p class="mt-3 mb-4">
+            Join modern teams using AI to improve ticket management.
+        </p>
+        <a href="{{ url_for('pricing') }}" class="btn cta-btn">
+            View Pricing
+        </a>
+    </div>
+</div>
+
+{% endblock %}

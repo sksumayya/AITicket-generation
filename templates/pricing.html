@@ -1,0 +1,155 @@
+{% extends "layout.html" %}
+{% block title %}Pricing - AI Ticket System{% endblock %}
+
+{% block extra_css %}
+<style>
+.pricing-hero {
+    background: linear-gradient(90deg,#a3389f, #8aabbb);
+    color: white;
+    padding: 70px 0;
+    text-align: center;
+}
+
+.pricing-section {
+    padding: 70px 0;
+}
+
+.pricing-card {
+    background: white;
+    border-radius: 15px;
+    padding: 40px 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    transition: 0.3s ease;
+    text-align: center;
+    border: 2px solid transparent;
+    cursor: pointer;
+}
+
+.pricing-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+}
+
+.pricing-card.active {
+    border-color: #a3389f;
+    box-shadow: 0 15px 40px rgba(163, 56, 159, 0.3);
+}
+
+.pricing-price {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 20px 0;
+}
+
+.pricing-features {
+    list-style: none;
+    padding: 0;
+    margin: 25px 0;
+}
+
+.pricing-features li {
+    margin-bottom: 12px;
+}
+
+.pricing-btn {
+    margin-top: 20px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<div class="pricing-hero">
+    <div class="container">
+        <h1>Simple & Transparent Pricing</h1>
+        <p class="mt-3">Choose a plan that fits your team size and needs.</p>
+    </div>
+</div>
+
+<!-- PRICING CARDS -->
+<div class="pricing-section">
+    <div class="container">
+        <div class="row g-4">
+
+            <!-- FREE PLAN -->
+            <div class="col-md-4">
+                <div class="pricing-card" id="freeCard">
+                    <h4>Free</h4>
+                    <div class="pricing-price">$0</div>
+                    <p>Perfect for individuals</p>
+
+                    <ul class="pricing-features">
+                        <li>✔ 10 Tickets / month</li>
+                        <li>✔ Basic AI categorization</li>
+                        <li>✔ Email Support</li>
+                        <li>✖ Advanced Analytics</li>
+                    </ul>
+
+                    <button class="btn btn-primary pricing-btn">
+                        Get Started
+                    </button>
+                </div>
+            </div>
+
+            <!-- PRO PLAN -->
+            <div class="col-md-4">
+                <div class="pricing-card active" id="proCard">
+                    <h4>Pro</h4>
+                    <div class="pricing-price">$29<span style="font-size:1rem;">/mo</span></div>
+                    <p>Best for growing teams</p>
+
+                    <ul class="pricing-features">
+                        <li>✔ Unlimited Tickets</li>
+                        <li>✔ Advanced AI Analysis</li>
+                        <li>✔ Analytics Dashboard</li>
+                        <li>✔ Priority Support</li>
+                    </ul>
+
+                    <button class="btn btn-primary pricing-btn">
+                        Choose Plan
+                    </button>
+                </div>
+            </div>
+
+            <!-- ENTERPRISE -->
+            <div class="col-md-4">
+                <div class="pricing-card" id="enterpriseCard">
+                    <h4>Enterprise</h4>
+                    <div class="pricing-price">Custom</div>
+                    <p>For large organizations</p>
+
+                    <ul class="pricing-features">
+                        <li>✔ Dedicated AI Model</li>
+                        <li>✔ Custom Integrations</li>
+                        <li>✔ Dedicated Support</li>
+                        <li>✔ SLA Guarantee</li>
+                    </ul>
+
+                    <button class="btn btn-primary pricing-btn">
+                        Contact Us
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- JAVASCRIPT -->
+<script>
+const cards = document.querySelectorAll('.pricing-card');
+
+cards.forEach(card => {
+    card.addEventListener('click', () => {
+
+        // Remove active from all
+        cards.forEach(c => c.classList.remove('active'));
+
+        // Add active to clicked
+        card.classList.add('active');
+    });
+});
+</script>
+
+{% endblock %}

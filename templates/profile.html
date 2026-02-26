@@ -1,0 +1,83 @@
+{% extends "layout.html" %}
+{% block title %}Profile - AI Ticket System{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <!-- Profile Card -->
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-5">
+
+                    <!-- Header Section -->
+                    <div class="text-center mb-4">
+
+                        <div class="rounded-circle d-inline-flex align-items-center justify-content-center text-white fw-bold"
+                             style="width:120px;height:120px;font-size:36px;
+                             background: linear-gradient(135deg, #6a11cb, #2575fc);">
+                            {{ current_user.username[:2]|upper }}
+                        </div>
+
+                        <h3 class="mt-3 mb-1">{{ current_user.username }}</h3>
+                        <p class="text-muted">{{ current_user.email }}</p>
+
+                        <span class="badge bg-success px-3 py-2 mt-2">
+                            Active Member
+                        </span>
+                    </div>
+
+                    <hr>
+
+                    <!-- Account Info -->
+                    <div class="row text-center mt-4">
+
+                        <div class="col-md-4">
+                            <h5 class="fw-bold text-primary">Member Since</h5>
+                            <p class="text-muted">
+                                {{ current_user.created_at.strftime('%d %B %Y') if current_user.created_at else 'N/A' }}
+                            </p>
+                        </div>
+
+                        <div class="col-md-4">
+                            <h5 class="fw-bold text-primary">Tickets Created</h5>
+                            <p class="text-muted">
+                                {{ current_user.tickets|length if current_user.tickets else 0 }}
+                            </p>
+                        </div>
+
+                        <div class="col-md-4">
+                            <h5 class="fw-bold text-primary">Account Status</h5>
+                            <p class="text-success fw-semibold">
+                                Verified
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <hr class="my-4">
+
+                    <!-- Action Buttons -->
+                    <div class="d-flex justify-content-center gap-3">
+
+                        <a href="{{ url_for('edit_profile') }}" class="btn btn-outline-primary px-4">
+                            <i class="fas fa-edit me-2"></i>Edit Profile
+                        </a>
+
+                        <a href="{{ url_for('change_password') }}" class="btn btn-outline-secondary px-4">
+                            <i class="fas fa-key me-2"></i>Change Password
+                        </a>
+
+                        <a href="{{ url_for('logout') }}" class="btn btn-danger px-4">
+                            <i class="fas fa-sign-out-alt me-2"></i>Logout
+                        </a>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
